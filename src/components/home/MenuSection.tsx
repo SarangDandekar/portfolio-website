@@ -113,14 +113,16 @@ export function MenuSection() {
                     whileHover={{ y: -6, scale: 1.02 }}
                     className="group relative overflow-hidden rounded-brand border border-border bg-card p-6 shadow-[var(--shadow-soft)] transition-shadow hover:border-primary/30 hover:shadow-[var(--shadow-medium)]"
                   >
-                    {item.bestseller && (
-                      <Badge className="absolute top-4 right-4">Bestseller</Badge>
-                    )}
-                    <div className="mb-3 flex items-start justify-between gap-4">
-                      <h3 className="font-heading text-lg font-semibold text-text-primary group-hover:text-primary">
-                        {item.name}
-                      </h3>
-                      <span className="shrink-0 font-semibold text-primary">
+                    <div className="mb-3 flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-heading text-lg font-semibold text-text-primary group-hover:text-primary">
+                          {item.name}
+                        </h3>
+                        {item.bestseller && (
+                          <Badge className="mt-2">Bestseller</Badge>
+                        )}
+                      </div>
+                      <span className="shrink-0 pt-0.5 text-right text-base font-bold text-primary">
                         {formatPrice(item.price, item.halfPrice)}
                       </span>
                     </div>
