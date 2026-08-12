@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Jugadu Cafe — Premium Portfolio Website
 
-## Getting Started
+A production-ready, premium café website built with Next.js 16, React, TypeScript, Tailwind CSS, Framer Motion, and Supabase.
 
-First, run the development server:
+## Quick Start
 
 ```bash
+cd jugadu-cafe
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Customize Your Brand
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Logo & Colors
 
-## Learn More
+Replace `public/logo.svg` with your official Jugadu Cafe logo, then update colors in:
 
-To learn more about Next.js, take a look at the following resources:
+- `src/config/theme.ts` — brand color definitions
+- `src/app/globals.css` — CSS variables (primary, secondary, accent, etc.)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Cafe Details
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Edit `src/config/site.ts`:
 
-## Deploy on Vercel
+- Address, phone, WhatsApp, Instagram
+- Opening hours
+- Google Maps embed URL
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Menu
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Replace `public/menu/jugadu-cafe-menu.pdf` with your menu PDF
+- Update menu items in `src/config/menu.ts`
+
+### 4. Gallery Photos
+
+Replace placeholder URLs in `src/config/gallery.ts` with your café photos in `public/images/gallery/`
+
+## Supabase Setup (Feedback Form)
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Copy `.env.example` to `.env.local` and add your credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+```
+
+3. Run the SQL migration in Supabase SQL Editor:
+
+```bash
+# File: supabase/migrations/001_feedback.sql
+```
+
+## Deploy
+
+```bash
+npm run build
+npm start
+```
+
+Deploy to Vercel, Netlify, or any Node.js host. Set environment variables in your hosting dashboard.
+
+## Tech Stack
+
+- **Next.js 16** (App Router)
+- **React 19** + TypeScript
+- **Tailwind CSS 4**
+- **Framer Motion** — animations
+- **Lucide React** — icons
+- **React Hook Form + Zod** — form validation
+- **Supabase** — feedback storage
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Home — hero, menu, gallery, testimonials, visit us |
+| `/feedback` | Dedicated feedback form with star ratings |
+
+## License
+
+Private — Jugadu Cafe

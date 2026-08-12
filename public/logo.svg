@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <circle cx="100" cy="100" r="95" fill="#6B2737"/>
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#C9A227" stroke-width="3"/>
+  <text x="100" y="118" text-anchor="middle" font-family="Georgia, serif" font-size="72" font-weight="bold" fill="#C9A227">J</text>
+  <path d="M130 145 Q145 130 140 115" stroke="#E07A5F" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.8"/>
+  <path d="M145 140 Q158 128 153 118" stroke="#E07A5F" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <ellipse cx="100" cy="155" rx="35" ry="8" fill="#C9A227" opacity="0.3"/>
+</svg>
