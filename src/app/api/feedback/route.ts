@@ -16,7 +16,7 @@ export async function GET() {
     .from("feedback")
     .select("id, overall_rating, customer_name, feedback_text, created_at")
     .order("created_at", { ascending: false })
-    .limit(12);
+    .limit(100);
 
   if (error) {
     console.error("Feedback fetch error:", error);
