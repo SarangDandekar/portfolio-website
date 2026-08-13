@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn, Play } from "lucide-react";
@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 
 export function Gallery() {
   const [filter, setFilter] = useState<string>("all");
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const filtered =
@@ -18,11 +20,28 @@ export function Gallery() {
       ? galleryImages
       : galleryImages.filter((item) => item.category === filter);
 
+  useEffect(() => {
+    setSlideIndex(0);
+    setDirection(0);
+  }, [filter]);
+
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
 
-  const navigate = (dir: "prev" | "next") => {
-    if (lightboxIndex === null) return;
+  const slidePrev = () => {
+    if (filtered.length === 0) return;
+    setDirection(-1);
+    setSlideIndex((i) => (i - 1 + filtered.length) % filtered.length);
+  };
+
+  const slideNext = () => {
+    if (filtered.length === 0) return;
+    setDirection(1);
+    setSlideIndex((i) => (i + 1) % filtered.length);
+  };
+
+  const navigateLightbox = (dir: "prev" | "next") => {
+    if (lightboxIndex === null || filtered.length === 0) return;
     const next =
       dir === "prev"
         ? (lightboxIndex - 1 + filtered.length) % filtered.length
@@ -31,6 +50,33 @@ export function Gallery() {
   };
 
   const active = lightboxIndex !== null ? filtered[lightboxIndex] : null;
+
+  /** Show up to 3 cards in view; animate as a sliding strip */
+  const getVisibleItems = () => {
+    if (filtered.length === 0) return [];
+    const count = Math.min(3, filtered.length);
+    return Array.from({ length: count }, (_, offset) => {
+      const index = (slideIndex + offset) % filtered.length;
+      return { item: filtered[index], index };
+    });
+  };
+
+  const visible = getVisibleItems();
+
+  const slideVariants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 80 : -80,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? -80 : 80,
+      opacity: 0,
+    }),
+  };
 
   return (
     <section id="gallery" className="bg-background-dark py-20 md:py-28">
@@ -62,64 +108,112 @@ export function Gallery() {
           </div>
         </FadeUp>
 
-        <motion.div layout className="columns-1 gap-4 sm:columns-2 lg:columns-3">
-          <AnimatePresence mode="popLayout">
-            {filtered.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4 }}
-                className={cn(
-                  "group relative mb-4 break-inside-avoid overflow-hidden rounded-brand border border-border bg-card",
-                  item.span === "tall" && "sm:min-h-[280px]",
-                )}
-              >
-                <button
-                  type="button"
-                  onClick={() => openLightbox(index)}
-                  className="relative block w-full cursor-pointer text-left"
+        <FadeUp delay={0.15}>
+          <div className="relative">
+            {/* Left / Right direction buttons */}
+            <button
+              type="button"
+              onClick={slidePrev}
+              className="absolute top-1/2 left-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-left-2 md:-left-4"
+              aria-label="Slide gallery left"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+            <button
+              type="button"
+              onClick={slideNext}
+              className="absolute top-1/2 right-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-right-2 md:-right-4"
+              aria-label="Slide gallery right"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+
+            <div className="overflow-hidden px-10 sm:px-14">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={`${filter}-${slideIndex}`}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
                 >
-                  {item.type === "video" ? (
-                    <div className="relative aspect-[3/4] bg-black sm:aspect-video">
-                      <video
-                        src={item.src}
-                        muted
-                        playsInline
-                        preload="metadata"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-primary/40">
-                        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg">
-                          <Play className="h-7 w-7 fill-current" />
-                        </span>
-                      </div>
+                  {visible.map(({ item, index }) => (
+                    <div
+                      key={`${item.id}-${index}`}
+                      className="group relative overflow-hidden rounded-brand border border-border bg-card"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(index)}
+                        className="relative block w-full cursor-pointer text-left"
+                      >
+                        {item.type === "video" ? (
+                          <div className="relative aspect-[4/5] bg-black sm:aspect-[3/4]">
+                            <video
+                              src={item.src}
+                              muted
+                              playsInline
+                              preload="metadata"
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors group-hover:bg-primary/40">
+                              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+                                <Play className="h-7 w-7 fill-current" />
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <Image
+                              src={item.src}
+                              alt={item.alt}
+                              width={800}
+                              height={1000}
+                              className="aspect-[4/5] w-full object-cover transition-transform duration-500 group-hover:scale-105 sm:aspect-[3/4]"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-primary/0 transition-all group-hover:bg-primary/40">
+                              <ZoomIn className="h-8 w-8 text-white opacity-0 transition-opacity group-hover:opacity-100" />
+                            </div>
+                          </>
+                        )}
+                        <p className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 sm:text-sm">
+                          {item.alt}
+                        </p>
+                      </button>
                     </div>
-                  ) : (
-                    <>
-                      <Image
-                        src={item.src}
-                        alt={item.alt}
-                        width={800}
-                        height={item.span === "tall" ? 1000 : 700}
-                        className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-primary/0 transition-all group-hover:bg-primary/40">
-                        <ZoomIn className="h-8 w-8 text-white opacity-0 transition-opacity group-hover:opacity-100" />
-                      </div>
-                    </>
-                  )}
-                  <p className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 sm:text-sm">
-                    {item.alt}
-                  </p>
-                </button>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Dots */}
+            {filtered.length > 1 && (
+              <div className="mt-8 flex justify-center gap-2">
+                {filtered.map((item, i) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setDirection(i > slideIndex ? 1 : -1);
+                      setSlideIndex(i);
+                    }}
+                    className={cn(
+                      "h-2.5 rounded-full transition-all",
+                      i === slideIndex
+                        ? "w-8 bg-primary"
+                        : "w-2.5 bg-border hover:bg-primary/50",
+                    )}
+                    aria-label={`Go to gallery item ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </FadeUp>
       </div>
 
       <AnimatePresence>
@@ -143,7 +237,7 @@ export function Gallery() {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate("prev");
+                navigateLightbox("prev");
               }}
               className="absolute left-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
               aria-label="Previous"
@@ -152,8 +246,8 @@ export function Gallery() {
             </button>
             <motion.div
               key={active.id}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.9, opacity: 0, x: direction * 40 }}
+              animate={{ scale: 1, opacity: 1, x: 0 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
               className="relative max-h-[85vh] max-w-5xl overflow-hidden rounded-brand"
@@ -181,7 +275,7 @@ export function Gallery() {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate("next");
+                navigateLightbox("next");
               }}
               className="absolute right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 sm:right-16"
               aria-label="Next"
