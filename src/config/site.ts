@@ -16,7 +16,7 @@ export const siteConfig = {
     phone: "+91 95884 47056",
     instagram: "https://instagram.com/jugadu_cafe.anil_dadmal_",
     instagramHandle: "@jugadu_cafe.anil_dadmal_",
-    email: "jugaducafe@gmail.com",
+    email: "anildadmal345@gmail.com",
   },
 
   hours: {
