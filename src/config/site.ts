@@ -28,7 +28,7 @@ export const siteConfig = {
   map: {
     embedUrl:
       "https://maps.google.com/maps?q=Near+Panchayat+Samiti,+Samudrapur,+Maharashtra&output=embed",
-    link: "https://maps.google.com/?q=Near+Panchayat+Samiti,+Samudrapur,+Maharashtra",
+    link: "https://maps.app.goo.gl/j5FMTcr6wqRuQEJ56?g_st=ac",
   },
 
   storeVideo: "/videos/store-tour.mp4",
