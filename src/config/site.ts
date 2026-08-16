@@ -33,6 +33,11 @@ export const siteConfig = {
 
   storeVideo: "/videos/store-tour.mp4",
 
+  /** Live site URL used for QR / posters */
+  qrTargetUrl:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://jugadu-cafe-eta-ten-78.vercel.app",
+
   social: {
     instagram: "https://instagram.com/jugadu_cafe.anil_dadmal_",
     /** Replace with your g.page review link from Google Business Profile */

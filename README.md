@@ -48,11 +48,15 @@ NEXT_PUBLIC_SUPABASE_URL=your_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-3. Run the SQL migration in Supabase SQL Editor:
+3. Run the SQL migrations in Supabase SQL Editor:
 
-```bash
-# File: supabase/migrations/001_feedback.sql
-```
+- `supabase/migrations/001_feedback.sql`
+- `supabase/migrations/002_public_feedback_read.sql`
+- `supabase/migrations/003_gallery_and_highlight.sql` (gallery + highlight for admin site)
+
+## Admin website
+
+Content uploads live in the separate app `../jugadu-cafe-admin` (login, gallery, highlight). Same Supabase project. See that folder’s README.
 
 ## Deploy
 

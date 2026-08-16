@@ -4,21 +4,32 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, ZoomIn, Play } from "lucide-react";
-import { galleryImages, galleryCategories } from "@/config/gallery";
+import {
+  galleryImages,
+  galleryCategories,
+  type GalleryMedia,
+} from "@/config/gallery";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FadeUp } from "@/components/animations/FadeUp";
 import { cn } from "@/lib/utils";
 
-export function Gallery() {
+type GalleryProps = {
+  /** Extra items from Supabase admin uploads (merged with static media) */
+  remoteItems?: GalleryMedia[];
+};
+
+export function Gallery({ remoteItems = [] }: GalleryProps) {
   const [filter, setFilter] = useState<string>("all");
   const [slideIndex, setSlideIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const allItems = [...remoteItems, ...galleryImages];
+
   const filtered =
     filter === "all"
-      ? galleryImages
-      : galleryImages.filter((item) => item.category === filter);
+      ? allItems
+      : allItems.filter((item) => item.category === filter);
 
   useEffect(() => {
     setSlideIndex(0);
