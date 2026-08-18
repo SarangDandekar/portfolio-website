@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingActions } from "@/components/layout/FloatingActions";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
+import { TrackViews } from "@/components/layout/TrackViews";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -80,6 +81,7 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <FloatingActions />
+        <TrackViews />
       </body>
     </html>
   );

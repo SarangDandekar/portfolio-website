@@ -18,6 +18,7 @@ import {
   StaggerContainer,
   StaggerItem,
 } from "@/components/animations/FadeUp";
+import type { StoryMedia } from "@/lib/supabase/content";
 
 const features = [
   {
@@ -58,7 +59,10 @@ const features = [
   },
 ];
 
-export function About() {
+export function About({ storyMedia }: { storyMedia?: StoryMedia | null }) {
+  const mediaSrc = storyMedia?.src ?? "/videos/our-story.mp4";
+  const mediaType = storyMedia?.type ?? "video";
+
   return (
     <section id="about" className="py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -76,18 +80,27 @@ export function About() {
                 whileHover={{ scale: 1.01 }}
                 className="relative aspect-[4/5] overflow-hidden rounded-brand border border-border bg-black shadow-[var(--shadow-strong)]"
               >
-                <video
-                  src="/videos/our-story.mp4"
-                  controls
-                  playsInline
-                  muted
-                  loop
-                  autoPlay
-                  preload="metadata"
-                  className="h-full w-full object-cover"
-                >
-                  Your browser does not support video playback.
-                </video>
+                {mediaType === "video" ? (
+                  <video
+                    src={mediaSrc}
+                    controls
+                    playsInline
+                    muted
+                    loop
+                    autoPlay
+                    preload="metadata"
+                    className="h-full w-full object-cover"
+                  >
+                    Your browser does not support video playback.
+                  </video>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={mediaSrc}
+                    alt="Our Story — Jugadu Cafe"
+                    className="h-full w-full object-cover"
+                  />
+                )}
               </motion.div>
               <div className="absolute -right-4 -bottom-4 -z-10 h-full w-full rounded-brand bg-primary/20" />
             </div>

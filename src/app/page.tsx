@@ -9,25 +9,27 @@ import { Testimonials } from "@/components/home/Testimonials";
 import { VisitUs } from "@/components/home/VisitUs";
 import { BottomCTA } from "@/components/home/BottomCTA";
 import {
-  fetchActiveHighlight,
+  fetchHighlights,
   fetchRemoteGalleryItems,
+  fetchStoryMedia,
 } from "@/lib/supabase/content";
 
 /** Refresh gallery / highlight shortly after admin updates */
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [highlight, remoteGallery] = await Promise.all([
-    fetchActiveHighlight(),
+  const [highlights, remoteGallery, storyMedia] = await Promise.all([
+    fetchHighlights(),
     fetchRemoteGalleryItems(),
+    fetchStoryMedia(),
   ]);
 
   return (
     <>
       <Hero />
       <BillWelcome />
-      {highlight ? <Highlight highlight={highlight} /> : null}
-      <About />
+      {highlights ? <Highlight highlights={highlights} /> : null}
+      <About storyMedia={storyMedia} />
       <MenuSection />
       <WhyChooseUs />
       <Gallery remoteItems={remoteGallery} />
