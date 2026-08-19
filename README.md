@@ -55,6 +55,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 - `supabase/migrations/003_gallery_and_highlight.sql` (gallery + highlight for admin site)
 - `supabase/migrations/004_highlight_items_and_story.sql` (Highlights slider + Our Story media)
 - `supabase/migrations/005_page_views.sql` (public site viewer counts for admin)
+- `supabase/migrations/006_storage_large_videos.sql` (raise cafe-media upload size)
 
 ## Admin website
 

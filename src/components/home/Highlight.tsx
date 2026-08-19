@@ -74,24 +74,34 @@ export function Highlight({ highlights }: HighlightProps) {
         {items.length > 0 && (
           <FadeUp delay={0.12}>
             <div className="relative">
-              <button
-                type="button"
-                onClick={slidePrev}
-                className="absolute top-1/2 left-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-left-2 md:-left-4"
-                aria-label="Previous highlight"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              <button
-                type="button"
-                onClick={slideNext}
-                className="absolute top-1/2 right-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-right-2 md:-right-4"
-                aria-label="Next highlight"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
+              {items.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={slidePrev}
+                    className="absolute top-1/2 left-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-left-2 md:-left-4"
+                    aria-label="Previous highlight"
+                  >
+                    <ChevronLeft className="h-6 w-6" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={slideNext}
+                    className="absolute top-1/2 right-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-right-2 md:-right-4"
+                    aria-label="Next highlight"
+                  >
+                    <ChevronRight className="h-6 w-6" />
+                  </button>
+                </>
+              )}
 
-              <div className="overflow-hidden px-10 sm:px-14">
+              <div
+                className={
+                  items.length > 1
+                    ? "overflow-hidden px-10 sm:px-14"
+                    : "overflow-hidden"
+                }
+              >
                 <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
                     key={slideIndex}
@@ -101,7 +111,11 @@ export function Highlight({ highlights }: HighlightProps) {
                     animate="center"
                     exit="exit"
                     transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    className={
+                      items.length === 1
+                        ? "mx-auto max-w-3xl"
+                        : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    }
                   >
                     {visible.map(({ item, index }: { item: HighlightMedia; index: number }) => (
                       <div

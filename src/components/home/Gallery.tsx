@@ -121,25 +121,34 @@ export function Gallery({ remoteItems = [] }: GalleryProps) {
 
         <FadeUp delay={0.15}>
           <div className="relative">
-            {/* Left / Right direction buttons */}
-            <button
-              type="button"
-              onClick={slidePrev}
-              className="absolute top-1/2 left-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-left-2 md:-left-4"
-              aria-label="Slide gallery left"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
-            <button
-              type="button"
-              onClick={slideNext}
-              className="absolute top-1/2 right-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-right-2 md:-right-4"
-              aria-label="Slide gallery right"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+            {filtered.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={slidePrev}
+                  className="absolute top-1/2 left-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-left-2 md:-left-4"
+                  aria-label="Slide gallery left"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={slideNext}
+                  className="absolute top-1/2 right-0 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card/95 text-primary shadow-[var(--shadow-medium)] transition-all hover:scale-105 hover:bg-primary hover:text-white sm:-right-2 md:-right-4"
+                  aria-label="Slide gallery right"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
+            )}
 
-            <div className="overflow-hidden px-10 sm:px-14">
+            <div
+              className={
+                filtered.length > 1
+                  ? "overflow-hidden px-10 sm:px-14"
+                  : "overflow-hidden"
+              }
+            >
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={`${filter}-${slideIndex}`}
@@ -244,17 +253,19 @@ export function Gallery({ remoteItems = [] }: GalleryProps) {
             >
               <X className="h-6 w-6" />
             </button>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigateLightbox("prev");
-              }}
-              className="absolute left-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-              aria-label="Previous"
-            >
-              <ChevronLeft className="h-6 w-6" />
-            </button>
+            {filtered.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateLightbox("prev");
+                }}
+                className="absolute left-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+            )}
             <motion.div
               key={active.id}
               initial={{ scale: 0.9, opacity: 0, x: direction * 40 }}
@@ -282,17 +293,19 @@ export function Gallery({ remoteItems = [] }: GalleryProps) {
               )}
               <p className="mt-3 text-center text-sm text-white">{active.alt}</p>
             </motion.div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigateLightbox("next");
-              }}
-              className="absolute right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 sm:right-16"
-              aria-label="Next"
-            >
-              <ChevronRight className="h-6 w-6" />
-            </button>
+            {filtered.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateLightbox("next");
+                }}
+                className="absolute right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 sm:right-16"
+                aria-label="Next"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
